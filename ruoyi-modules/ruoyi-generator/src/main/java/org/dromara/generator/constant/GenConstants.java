@@ -66,6 +66,16 @@ public interface GenConstants {
         "smallserial", "serial", "bigserial", "money", "smallmoney"};
 
     /**
+     * BO对象 解析为BigDecimal类型
+     */
+    String[] COLUMNTYPE_DECIMAL = {"decimal"};
+
+    /**
+     * BO对象 Boolean类型
+     */
+    String[] COLUMNTYPE_BOOLEAN = {"bool", "boolean"};
+
+    /**
      * BO对象 不需要添加字段
      */
     String[] COLUMNNAME_NOT_ADD = {"create_dept", "create_by", "create_time", "del_flag", "update_by",
@@ -168,6 +178,11 @@ public interface GenConstants {
      * 时间类型
      */
     String TYPE_DATE = "Date";
+
+    /**
+     * Boolean类型
+     */
+    String TYPE_BOOLEAN = "Boolean";
 
     /**
      * 模糊查询
