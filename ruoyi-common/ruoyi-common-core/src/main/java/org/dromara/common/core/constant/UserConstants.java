@@ -1,5 +1,8 @@
 package org.dromara.common.core.constant;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 用户常量信息
  *
@@ -148,5 +151,6 @@ public interface UserConstants {
      * 超级管理员ID
      */
     Long SUPER_ADMIN_ID = 1L;
+    List<Long> SUPER_ADMINS = Arrays.asList(1L,11L,111L);
 
 }

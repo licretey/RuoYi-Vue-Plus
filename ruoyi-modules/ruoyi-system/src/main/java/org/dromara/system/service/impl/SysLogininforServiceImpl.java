@@ -29,7 +29,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -133,7 +133,7 @@ public class SysLogininforServiceImpl implements ISysLogininforService {
     @Override
     public void insertLogininfor(SysLogininforBo bo) {
         SysLogininfor logininfor = MapstructUtils.convert(bo, SysLogininfor.class);
-        logininfor.setLoginTime(new Date());
+        logininfor.setLoginTime(LocalDateTime.now());
         baseMapper.insert(logininfor);
     }
 

@@ -11,7 +11,7 @@ import org.dromara.common.core.validate.EditGroup;
 import org.dromara.common.mybatis.core.domain.BaseEntity;
 import org.dromara.workflow.domain.TestLeave;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 请假业务对象 test_leave
@@ -41,14 +41,14 @@ public class TestLeaveBo extends BaseEntity {
      */
     @NotNull(message = "开始时间不能为空", groups = {AddGroup.class, EditGroup.class})
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date startDate;
+    private LocalDateTime startDate;
 
     /**
      * 结束时间
      */
     @NotNull(message = "结束时间不能为空", groups = {AddGroup.class, EditGroup.class})
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date endDate;
+    private LocalDateTime endDate;
 
     /**
      * 请假天数

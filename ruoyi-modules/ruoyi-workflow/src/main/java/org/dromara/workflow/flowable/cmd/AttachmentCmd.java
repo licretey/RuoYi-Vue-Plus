@@ -53,6 +53,7 @@ public class AttachmentCmd implements Command<Boolean> {
                         attachmentEntity.setTaskId(taskId);
                         attachmentEntity.setProcessInstanceId(processInstanceId);
                         attachmentEntity.setContentId(oss.getOssId().toString());
+                        // todo date
                         attachmentEntity.setTime(new Date());
                         attachmentEntityManager.insert(attachmentEntity);
                     }

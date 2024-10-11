@@ -42,7 +42,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 用户 业务层处理
@@ -473,7 +472,7 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         if (ArrayUtil.isNotEmpty(roleIds)) {
             List<Long> roleList = new ArrayList<>(List.of(roleIds));
             if (!LoginHelper.isSuperAdmin(userId)) {
-                roleList.remove(UserConstants.SUPER_ADMIN_ID);
+                UserConstants.SUPER_ADMINS.forEach(roleList::remove);
             }
             // 判断是否具有此角色的操作权限
             List<SysRoleVo> roles = roleMapper.selectRoleList(
@@ -629,12 +628,6 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         return ObjectUtil.isNull(sysUser) ? null : sysUser.getEmail();
     }
 
-    /**
-     * 通过用户ID查询用户列表
-     *
-     * @param userIds 用户ids
-     * @return 用户列表
-     */
     @Override
     public List<UserDTO> selectListByIds(List<Long> userIds) {
         if (CollUtil.isEmpty(userIds)) {
@@ -643,54 +636,28 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         List<SysUserVo> list = baseMapper.selectVoList(new LambdaQueryWrapper<SysUser>()
             .select(SysUser::getUserId, SysUser::getUserName, SysUser::getNickName, SysUser::getEmail, SysUser::getPhonenumber)
             .eq(SysUser::getStatus, UserConstants.USER_NORMAL)
-            .in(SysUser::getUserId, userIds));
+            .in(CollUtil.isNotEmpty(userIds), SysUser::getUserId, userIds));
         return BeanUtil.copyToList(list, UserDTO.class);
     }
 
-    /**
-     * 通过角色ID查询用户ID
-     *
-     * @param roleIds 角色ids
-     * @return 用户ids
-     */
     @Override
     public List<Long> selectUserIdsByRoleIds(List<Long> roleIds) {
-        if (CollUtil.isEmpty(roleIds)) {
-            return List.of();
-        }
         List<SysUserRole> userRoles = userRoleMapper.selectList(
             new LambdaQueryWrapper<SysUserRole>().in(SysUserRole::getRoleId, roleIds));
         return StreamUtils.toList(userRoles, SysUserRole::getUserId);
     }
 
-    /**
-     * 通过角色ID查询用户
-     *
-     * @param roleIds 角色ids
-     * @return 用户
-     */
     @Override
     public List<UserDTO> selectUsersByRoleIds(List<Long> roleIds) {
         if (CollUtil.isEmpty(roleIds)) {
             return List.of();
         }
-
-        // 通过角色ID获取用户角色信息
         List<SysUserRole> userRoles = userRoleMapper.selectList(
             new LambdaQueryWrapper<SysUserRole>().in(SysUserRole::getRoleId, roleIds));
-
-        // 获取用户ID列表
-        Set<Long> userIds = StreamUtils.toSet(userRoles, SysUserRole::getUserId);
-
-        return selectListByIds(new ArrayList<>(userIds));
+        List<Long> userIds = StreamUtils.toList(userRoles, SysUserRole::getUserId);
+        return selectListByIds(userIds);
     }
 
-    /**
-     * 通过部门ID查询用户
-     *
-     * @param deptIds 部门ids
-     * @return 用户
-     */
     @Override
     public List<UserDTO> selectUsersByDeptIds(List<Long> deptIds) {
         if (CollUtil.isEmpty(deptIds)) {
@@ -699,7 +666,7 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         List<SysUserVo> list = baseMapper.selectVoList(new LambdaQueryWrapper<SysUser>()
             .select(SysUser::getUserId, SysUser::getUserName, SysUser::getNickName, SysUser::getEmail, SysUser::getPhonenumber)
             .eq(SysUser::getStatus, UserConstants.USER_NORMAL)
-            .in(SysUser::getDeptId, deptIds));
+            .in(CollUtil.isNotEmpty(deptIds), SysUser::getDeptId, deptIds));
         return BeanUtil.copyToList(list, UserDTO.class);
     }
 }

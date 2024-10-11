@@ -162,8 +162,9 @@ public class GenTableServiceImpl implements IGenTableService {
                 GenTable gen = new GenTable();
                 gen.setTableName(x.getName());
                 gen.setTableComment(x.getComment());
-                gen.setCreateTime(x.getCreateTime());
-                gen.setUpdateTime(x.getUpdateTime());
+                // todo setDateTime();
+                //gen.setCreateTime(x.getCreateTime());
+                //gen.setUpdateTime(x.getUpdateTime());
                 return gen;
             }).toList();
 
@@ -213,8 +214,9 @@ public class GenTableServiceImpl implements IGenTableService {
             gen.setDataName(dataName);
             gen.setTableName(x.getName());
             gen.setTableComment(x.getComment());
-            gen.setCreateTime(x.getCreateTime());
-            gen.setUpdateTime(x.getUpdateTime());
+            // to
+            // gen.setCreateTime(x.getCreateTime());
+            // gen.setUpdateTime(x.getUpdateTime());
             return gen;
         }).toList();
     }

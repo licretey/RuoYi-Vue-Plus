@@ -1,11 +1,14 @@
 package org.dromara.system.domain;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import org.dromara.common.core.constant.UserConstants;
-import org.dromara.common.tenant.core.TenantEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.common.core.constant.UserConstants;
+import org.dromara.common.excel.annotation.ExcelDictFormat;
+import org.dromara.common.excel.convert.ExcelDictConvert;
+import org.dromara.common.tenant.core.TenantEntity;
 
 /**
  * 字典数据表 sys_dict_data
@@ -58,6 +61,14 @@ public class SysDictData extends TenantEntity {
      * 是否默认（Y是 N否）
      */
     private String isDefault;
+
+    /**
+     * 状态（0停用 1正常）
+     */
+    @ExcelProperty(value = "状态", converter = ExcelDictConvert.class)
+    @ExcelDictFormat(dictType = "sys_normal_disable")
+    private String status;
+
 
     /**
      * 备注

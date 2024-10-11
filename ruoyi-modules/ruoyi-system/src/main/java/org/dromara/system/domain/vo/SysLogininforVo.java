@@ -1,6 +1,6 @@
 package org.dromara.system.domain.vo;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import org.dromara.common.excel.annotation.ExcelDictFormat;
@@ -100,7 +100,7 @@ public class SysLogininforVo implements Serializable {
      * 访问时间
      */
     @ExcelProperty(value = "访问时间")
-    private Date loginTime;
+    private LocalDateTime loginTime;
 
 
 }

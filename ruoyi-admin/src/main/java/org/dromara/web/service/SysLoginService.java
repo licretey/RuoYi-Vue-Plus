@@ -19,7 +19,11 @@ import org.dromara.common.core.enums.LoginType;
 import org.dromara.common.core.enums.TenantStatus;
 import org.dromara.common.core.exception.ServiceException;
 import org.dromara.common.core.exception.user.UserException;
-import org.dromara.common.core.utils.*;
+import org.dromara.common.core.utils.DateUtils;
+import org.dromara.common.core.utils.MessageUtils;
+import org.dromara.common.core.utils.ServletUtils;
+import org.dromara.common.core.utils.SpringUtils;
+import org.dromara.common.core.utils.StringUtils;
 import org.dromara.common.log.event.LogininforEvent;
 import org.dromara.common.mybatis.helper.DataPermissionHelper;
 import org.dromara.common.redis.utils.RedisUtils;
@@ -28,14 +32,21 @@ import org.dromara.common.tenant.exception.TenantException;
 import org.dromara.common.tenant.helper.TenantHelper;
 import org.dromara.system.domain.SysUser;
 import org.dromara.system.domain.bo.SysSocialBo;
-import org.dromara.system.domain.vo.*;
+import org.dromara.system.domain.vo.SysDeptVo;
+import org.dromara.system.domain.vo.SysRoleVo;
+import org.dromara.system.domain.vo.SysSocialVo;
+import org.dromara.system.domain.vo.SysTenantVo;
+import org.dromara.system.domain.vo.SysUserVo;
 import org.dromara.system.mapper.SysUserMapper;
-import org.dromara.system.service.*;
+import org.dromara.system.service.ISysDeptService;
+import org.dromara.system.service.ISysPermissionService;
+import org.dromara.system.service.ISysRoleService;
+import org.dromara.system.service.ISysSocialService;
+import org.dromara.system.service.ISysTenantService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -175,7 +186,7 @@ public class SysLoginService {
         SysUser sysUser = new SysUser();
         sysUser.setUserId(userId);
         sysUser.setLoginIp(ip);
-        sysUser.setLoginDate(DateUtils.getNowDate());
+        sysUser.setLoginDate(DateUtils.getLocalNow());
         sysUser.setUpdateBy(userId);
         DataPermissionHelper.ignore(() -> userMapper.updateById(sysUser));
     }
@@ -237,7 +248,7 @@ public class SysLoginService {
             log.info("登录租户：{} 已被停用.", tenantId);
             throw new TenantException("tenant.blocked");
         } else if (ObjectUtil.isNotNull(tenant.getExpireTime())
-            && new Date().after(tenant.getExpireTime())) {
+            && DateUtils.getLocalNow().isAfter(tenant.getExpireTime())) {
             log.info("登录租户：{} 已超过有效期.", tenantId);
             throw new TenantException("tenant.expired");
         }

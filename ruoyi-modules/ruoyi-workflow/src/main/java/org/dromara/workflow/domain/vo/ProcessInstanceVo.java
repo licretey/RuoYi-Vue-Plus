@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -66,12 +66,12 @@ public class ProcessInstanceVo implements Serializable {
     /**
      * 启动时间
      */
-    private Date startTime;
+    private LocalDateTime startTime;
 
     /**
      * 结束时间
      */
-    private Date endTime;
+    private LocalDateTime endTime;
 
     /**
      * 启动人id

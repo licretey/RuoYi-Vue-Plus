@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import java.io.Serial;
 
@@ -127,19 +127,19 @@ public class ActHiTaskinst implements Serializable {
      * 开始事件
      */
     @TableField(value = "START_TIME_")
-    private Date startTime;
+    private LocalDateTime startTime;
 
     /**
      * 认领时间
      */
     @TableField(value = "CLAIM_TIME_")
-    private Date claimTime;
+    private LocalDateTime claimTime;
 
     /**
      * 结束时间
      */
     @TableField(value = "END_TIME_")
-    private Date endTime;
+    private LocalDateTime endTime;
 
     /**
      * 持续时间
@@ -163,7 +163,7 @@ public class ActHiTaskinst implements Serializable {
      * 到期时间
      */
     @TableField(value = "DUE_DATE_")
-    private Date dueDate;
+    private LocalDateTime dueDate;
 
     /**
      *
@@ -181,7 +181,7 @@ public class ActHiTaskinst implements Serializable {
      * 最后修改时间
      */
     @TableField(value = "LAST_UPDATED_TIME_")
-    private Date lastUpdatedTime;
+    private LocalDateTime lastUpdatedTime;
 
     /**
      * 租户id

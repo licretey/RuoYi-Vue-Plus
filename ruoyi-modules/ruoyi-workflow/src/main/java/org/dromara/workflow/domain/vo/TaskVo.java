@@ -6,7 +6,7 @@ import org.dromara.common.translation.constant.TransConstant;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 任务视图
@@ -79,17 +79,17 @@ public class TaskVo implements Serializable {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 已办任务-创建时间
      */
-    private Date startTime;
+    private LocalDateTime startTime;
 
     /**
      * 结束时间
      */
-    private Date endTime;
+    private LocalDateTime endTime;
 
     /**
      * 节点id
@@ -99,7 +99,7 @@ public class TaskVo implements Serializable {
     /**
      * 任务截止日期
      */
-    private Date dueDate;
+    private LocalDateTime dueDate;
 
     /**
      * 流程类别
@@ -119,7 +119,7 @@ public class TaskVo implements Serializable {
     /**
      * 认领时间
      */
-    private Date claimTime;
+    private LocalDateTime claimTime;
 
     /**
      * 流程状态

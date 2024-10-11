@@ -142,7 +142,7 @@ public class SysOssServiceImpl implements ISysOssService, OssService {
         lqw.eq(StringUtils.isNotBlank(bo.getFileSuffix()), SysOss::getFileSuffix, bo.getFileSuffix());
         lqw.eq(StringUtils.isNotBlank(bo.getUrl()), SysOss::getUrl, bo.getUrl());
         lqw.between(params.get("beginCreateTime") != null && params.get("endCreateTime") != null,
-            SysOss::getCreateTime, params.get("beginCreateTime"), params.get("endCreateTime"));
+                SysOss::getCreateTime, params.get("beginCreateTime"), params.get("endCreateTime"));
         lqw.eq(ObjectUtil.isNotNull(bo.getCreateBy()), SysOss::getCreateBy, bo.getCreateBy());
         lqw.eq(StringUtils.isNotBlank(bo.getService()), SysOss::getService, bo.getService());
         lqw.orderByAsc(SysOss::getOssId);
@@ -244,7 +244,7 @@ public class SysOssServiceImpl implements ISysOssService, OssService {
         if (isValid) {
             // 做一些业务上的校验,判断是否需要校验
         }
-        List<SysOss> list = baseMapper.selectByIds(ids);
+        List<SysOss> list = baseMapper.selectBatchIds(ids);
         for (SysOss sysOss : list) {
             OssClient storage = OssFactory.instance(sysOss.getService());
             storage.delete(sysOss.getUrl());

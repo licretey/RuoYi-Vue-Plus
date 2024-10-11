@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author may
  */
-public class UpdateHiTaskInstCmd implements Command<Boolean> {
+    public class UpdateHiTaskInstCmd implements Command<Boolean> {
 
     private final List<String> taskIds;
 
@@ -39,6 +39,7 @@ public class UpdateHiTaskInstCmd implements Command<Boolean> {
                 if (historicTask != null) {
                     historicTask.setProcessDefinitionId(processDefinitionId);
                     historicTask.setProcessInstanceId(processInstanceId);
+                    // todo date
                     historicTask.setCreateTime(new Date());
                     CommandContextUtil.getHistoricTaskService().updateHistoricTask(historicTask, true);
                 }

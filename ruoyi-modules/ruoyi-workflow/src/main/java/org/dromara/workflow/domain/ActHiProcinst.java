@@ -7,7 +7,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 流程实例对象 act_hi_procinst
@@ -56,13 +56,13 @@ public class ActHiProcinst implements Serializable {
      *
      */
     @TableField(value = "START_TIME_")
-    private Date startTime;
+    private LocalDateTime startTime;
 
     /**
      *
      */
     @TableField(value = "END_TIME_")
-    private Date endTime;
+    private LocalDateTime endTime;
 
     /**
      *

@@ -61,6 +61,7 @@ public class ProcessDefinitionVo implements Serializable {
      * 流程部署时间
      */
     private Date deploymentTime;
+    // todo date
 
     /**
      * 流程定义配置
