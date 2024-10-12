@@ -31,7 +31,7 @@ management:
     health:
       show-details: ALWAYS
     logfile:
-      external-file: ./logs/ruoyi-monitor-admin.log
+      external-file: ../logs/ruoyi-monitor-admin.log
 
 --- # 监控配置
 spring.boot.admin.client:
