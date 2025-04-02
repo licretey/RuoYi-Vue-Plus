@@ -8,6 +8,8 @@ import org.springframework.util.AntPathMatcher;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -55,6 +57,32 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return !isEmpty(str);
     }
 
+    /**
+     * 格式化文本, {} 表示占位符<br>
+     * 例：<br>
+     * 通常使用：format("this is {0} for {1}", "a", "b") -> this is a for b<br>
+     *
+     * @return java.lang.String
+     *
+     * @date 2024-10-30 14:33:17
+     */
+    public static String strFormat(String template, Object... args) {
+        // 正则表达式匹配 {数字}
+        Pattern pattern = Pattern.compile("\\{(\\d+)\\}");
+        Matcher matcher = pattern.matcher(template);
+
+        StringBuffer result = new StringBuffer();
+        while (matcher.find()) {
+            // 获取变量索引
+            int index = Integer.parseInt(matcher.group(1));
+            // 获取对应的参数
+            String replacement = (index < args.length) ? args[index].toString() : matcher.group(0);
+            // 替换变量
+            matcher.appendReplacement(result, replacement);
+        }
+        matcher.appendTail(result);
+        return result.toString();
+    }
     /**
      * 去空格
      */
