@@ -282,7 +282,7 @@ const { ${dictsNoSymbol} } = toRefs<any>(proxy?.useDict(${dicts}));
 const ${businessName}List = ref<${BusinessName}VO[]>([]);
 const ${businessName}Options = ref<${BusinessName}Option[]>([]);
 const buttonLoading = ref(false);
-const showSearch = ref(true);
+const showSearch = ref(false);
 const isExpandAll = ref(true);
 const loading = ref(false);
 
