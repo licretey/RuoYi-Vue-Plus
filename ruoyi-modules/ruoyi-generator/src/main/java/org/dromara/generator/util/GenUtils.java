@@ -59,6 +59,9 @@ public class GenUtils {
         } else if (arraysContains(GenConstants.COLUMNTYPE_TIME, dataType)) {
             column.setJavaType(GenConstants.TYPE_DATE);
             column.setHtmlType(GenConstants.HTML_DATETIME);
+        } else if (arraysContains(GenConstants.COLUMNTYPE_BOOLEAN, dataType)) {
+            column.setJavaType(GenConstants.TYPE_BOOLEAN);
+            column.setHtmlType(GenConstants.HTML_CHECKBOX);
         } else if (arraysContains(GenConstants.COLUMNTYPE_NUMBER, dataType)) {
             column.setHtmlType(GenConstants.HTML_INPUT);
             // 数据库的数字字段与java不匹配 且很多数据库的数字字段很模糊 例如oracle只有number没有细分
