@@ -51,7 +51,9 @@ public class PlusSpringCacheManager implements CacheManager {
 
     private boolean transactionAware = true;
 
+    // 缓存组配置集合
     Map<String, CacheConfig> configMap = new ConcurrentHashMap<>();
+    // 缓存实例集合
     ConcurrentMap<String, Cache> instanceMap = new ConcurrentHashMap<>();
 
     /**
@@ -132,6 +134,7 @@ public class PlusSpringCacheManager implements CacheManager {
 
         CacheConfig config = configMap.get(name);
         if (config == null) {
+            // 0#0#0 表示不会过期、最大空闲时间无限、不限条数
             config = createDefaultConfig();
             configMap.put(name, config);
         }
@@ -146,6 +149,7 @@ public class PlusSpringCacheManager implements CacheManager {
             config.setMaxSize(Integer.parseInt(array[3]));
         }
 
+        // 创建分组
         if (config.getMaxIdleTime() == 0 && config.getTTL() == 0 && config.getMaxSize() == 0) {
             return createMap(name, config);
         }
@@ -153,13 +157,22 @@ public class PlusSpringCacheManager implements CacheManager {
         return createMapCache(name, config);
     }
 
+    /**
+     * 创建cache分组，无限制
+     * @param name
+     * @param config
+     * @return
+     */
     private Cache createMap(String name, CacheConfig config) {
         RMap<Object, Object> map = RedisUtils.getClient().getMap(name);
 
+        // 没有限制
         Cache cache = new CaffeineCacheDecorator(name, new RedissonCache(map, allowNullValues));
         if (transactionAware) {
+            // 会考虑事务
             cache = new TransactionAwareCacheDecorator(cache);
         }
+        // 有历史的分组就直接使用历史分组，放弃新建（有时返回旧值，无时返回null）
         Cache oldCache = instanceMap.putIfAbsent(name, cache);
         if (oldCache != null) {
             cache = oldCache;
@@ -167,6 +180,12 @@ public class PlusSpringCacheManager implements CacheManager {
         return cache;
     }
 
+    /**
+     * 创建cache分组，根据配置设置，会有最大长度限制
+     * @param name
+     * @param config
+     * @return
+     */
     private Cache createMapCache(String name, CacheConfig config) {
         RMapCache<Object, Object> map = RedisUtils.getClient().getMapCache(name);
 

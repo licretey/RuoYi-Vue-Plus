@@ -14,6 +14,7 @@ server:
     buffer-size: 512
     # 是否分配的直接内存
     direct-buffers: true
+    # 虚拟线程开启时这些设置无效
     threads:
       # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
       io: 8
@@ -201,6 +202,7 @@ springdoc:
         name: ${sa-token.token-name}
   #这里定义了两个分组，可定义多个，也可以不定义
   group-configs:
+    # 下面是集合属性，每个元素包含有group、packages-to-scan等属性
     - group: 1.演示模块
       packages-to-scan: org.dromara.demo
     - group: 2.通用模块
@@ -230,6 +232,7 @@ thread-pool:
   # 线程池维护线程所允许的空闲时间
   keepAliveSeconds: 300
 
+# --- 用于分割配置文件（可用于重复使用前缀得到隔离的效果）
 --- # 分布式锁 lock4j 全局配置
 lock4j:
   # 获取分布式锁超时时间，默认为 3000 毫秒

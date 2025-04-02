@@ -1,6 +1,8 @@
 package org.dromara.common.redis.manager;
 
+import org.dromara.common.core.constant.CacheNames;
 import org.dromara.common.core.utils.SpringUtils;
+import org.dromara.common.redis.utils.RedisUtils;
 import org.springframework.cache.Cache;
 
 import java.util.concurrent.Callable;
@@ -54,12 +56,19 @@ public class CaffeineCacheDecorator implements Cache {
     public void put(Object key, Object value) {
         CAFFEINE.invalidate(getUniqueKey(key));
         cache.put(key, value);
+        // 发布缓存更新消息
+        RedisUtils.publish(CacheNames.CACHE_UPDATE_CHANNEL + name, getUniqueKey(key));
     }
 
     @Override
     public ValueWrapper putIfAbsent(Object key, Object value) {
         CAFFEINE.invalidate(getUniqueKey(key));
-        return cache.putIfAbsent(key, value);
+        ValueWrapper result = cache.putIfAbsent(key, value);
+        if (result == null) {
+            // 只有在实际更新时才发布消息
+            RedisUtils.publish(CacheNames.CACHE_UPDATE_CHANNEL + name, getUniqueKey(key));
+        }
+        return result;
     }
 
     @Override
@@ -72,6 +81,8 @@ public class CaffeineCacheDecorator implements Cache {
         boolean b = cache.evictIfPresent(key);
         if (b) {
             CAFFEINE.invalidate(getUniqueKey(key));
+            // 发布缓存删除消息
+            RedisUtils.publish(CacheNames.CACHE_UPDATE_CHANNEL + name, getUniqueKey(key));
         }
         return b;
     }
@@ -80,6 +91,8 @@ public class CaffeineCacheDecorator implements Cache {
     public void clear() {
         CAFFEINE.invalidateAll();
         cache.clear();
+        // 发布缓存清空消息
+        RedisUtils.publish(CacheNames.CACHE_UPDATE_CHANNEL + name, "ALL");
     }
 
     @Override

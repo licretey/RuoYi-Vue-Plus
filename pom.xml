@@ -440,7 +440,7 @@
                     <excludedGroups>exclude</excludedGroups>
                 </configuration>
             </plugin>
-            <!-- 统一版本号管理 -->
+            <!-- 统一版本号管理：扁平化生成pom文件方便管理 -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>

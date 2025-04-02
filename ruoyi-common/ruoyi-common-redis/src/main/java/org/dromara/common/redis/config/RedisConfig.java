@@ -9,10 +9,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.common.core.constant.CacheNames;
 import org.dromara.common.core.utils.SpringUtils;
 import org.dromara.common.redis.config.properties.RedissonProperties;
 import org.dromara.common.redis.handler.KeyPrefixHandler;
 import org.dromara.common.redis.handler.RedisExceptionHandler;
+import org.dromara.common.redis.listener.CacheUpdateListener;
 import org.redisson.client.codec.StringCodec;
 import org.redisson.codec.CompositeCodec;
 import org.redisson.codec.TypedJsonJacksonCodec;
@@ -22,6 +24,9 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.VirtualThreadTaskExecutor;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -39,6 +44,18 @@ public class RedisConfig {
 
     @Autowired
     private RedissonProperties redissonProperties;
+
+    @Autowired
+    private CacheUpdateListener cacheUpdateListener;
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        // 订阅缓存更新频道
+        container.addMessageListener(cacheUpdateListener, new PatternTopic(CacheNames.CACHE_UPDATE_CHANNEL));
+        return container;
+    }
 
     @Bean
     public RedissonAutoConfigurationCustomizer redissonCustomizer() {

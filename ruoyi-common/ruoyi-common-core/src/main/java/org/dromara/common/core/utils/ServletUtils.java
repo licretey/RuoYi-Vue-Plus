@@ -108,7 +108,7 @@ public class ServletUtils extends JakartaServletUtil {
 
     /**
      * 获取所有请求参数（以 Map 的形式返回，值为字符串形式的拼接）
-     *
+     * 通过“,”拼接
      * @param request 请求对象{@link ServletRequest}
      * @return 请求参数的 Map，键为参数名，值为拼接后的字符串
      */
@@ -163,6 +163,7 @@ public class ServletUtils extends JakartaServletUtil {
 
     /**
      * 获取当前请求的请求属性
+     * RequestContextHolder是spring提供的，存在线程的ThreadLocal中（切换线程时注意传递）
      *
      * @return {@link ServletRequestAttributes} 请求属性对象
      */

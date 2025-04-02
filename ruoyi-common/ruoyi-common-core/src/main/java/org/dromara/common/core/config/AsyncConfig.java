@@ -16,6 +16,8 @@ import java.util.concurrent.Executor;
  * <p>
  * 如果未使用虚拟线程则生效
  *
+ * 未配置线程池时直接使用，会总动启动线程，并且该线程无法复用，高并发下效率差
+ *
  * @author Lion Li
  */
 @AutoConfiguration

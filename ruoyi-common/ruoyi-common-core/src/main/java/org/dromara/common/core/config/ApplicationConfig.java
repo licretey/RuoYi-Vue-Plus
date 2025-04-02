@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @AutoConfiguration
 @EnableAspectJAutoProxy
+// 开启代理，设置强制使用cglib代理
 @EnableAsync(proxyTargetClass = true)
 public class ApplicationConfig {
 

@@ -85,4 +85,6 @@ public interface CacheNames {
      */
     String ONLINE_TOKEN = "online_tokens";
 
+    String CACHE_UPDATE_CHANNEL = "caffeine:update:channel:*";
+
 }
