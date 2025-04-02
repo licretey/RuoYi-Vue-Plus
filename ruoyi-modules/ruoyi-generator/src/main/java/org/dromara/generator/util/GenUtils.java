@@ -11,6 +11,8 @@ import org.dromara.generator.domain.GenTableColumn;
 
 import java.util.Arrays;
 
+import static org.dromara.generator.constant.GenConstants.COLUMNTYPE_DECIMAL;
+
 /**
  * 代码生成器 工具类
  *
@@ -62,6 +64,11 @@ public class GenUtils {
             // 数据库的数字字段与java不匹配 且很多数据库的数字字段很模糊 例如oracle只有number没有细分
             // 所以默认数字类型全为Long可在界面上自行编辑想要的类型 有什么特殊需求也可以在这里特殊处理
             column.setJavaType(GenConstants.TYPE_LONG);
+            // 如果是浮点型 统一用BigDecimal
+            String[] str = StringUtils.split(StringUtils.substringBetween(column.getColumnType(), "(", ")"), StringUtils.SEPARATOR);
+            if (arraysContains(COLUMNTYPE_DECIMAL, dataType) || str != null && str.length == 2 && Integer.parseInt(str[1]) > 0) {
+                column.setJavaType(GenConstants.TYPE_BIGDECIMAL);
+            }
         }
 
         // BO对象 默认插入勾选

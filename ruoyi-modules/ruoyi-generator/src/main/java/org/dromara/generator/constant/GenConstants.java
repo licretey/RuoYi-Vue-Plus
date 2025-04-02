@@ -164,6 +164,9 @@ public interface GenConstants {
      */
     String TYPE_BIGDECIMAL = "BigDecimal";
 
+    String[] COLUMNTYPE_DECIMAL = {"decimal"};
+
+
     /**
      * 时间类型
      */
