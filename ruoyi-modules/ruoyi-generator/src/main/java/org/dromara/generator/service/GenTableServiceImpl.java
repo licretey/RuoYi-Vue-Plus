@@ -128,6 +128,7 @@ public class GenTableServiceImpl implements IGenTableService {
         if (CollUtil.isEmpty(tablesMap)) {
             return TableDataInfo.build();
         }
+        // gen_table记录已经生成的业务表
         List<String> tableNames = baseMapper.selectTableNameList(genTable.getDataName());
         String[] tableArrays;
         if (CollUtil.isNotEmpty(tableNames)) {
@@ -137,7 +138,9 @@ public class GenTableServiceImpl implements IGenTableService {
         }
         // 过滤并转换表格数据
         List<GenTable> tables = tablesMap.values().stream()
+            // 过滤掉特定前缀不需要的表
             .filter(x -> !StringUtils.startWithAnyIgnoreCase(x.getName(), TABLE_IGNORE))
+            // 过滤掉已生成的表（表名不在已生成的表中）
             .filter(x -> {
                 if (CollUtil.isEmpty(tableNames)) {
                     return true;
