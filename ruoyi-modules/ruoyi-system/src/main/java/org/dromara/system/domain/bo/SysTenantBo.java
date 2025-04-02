@@ -8,9 +8,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import jakarta.validation.constraints.*;
 
-import java.util.Date;
+
 
 import org.dromara.common.mybatis.core.domain.BaseEntity;
+
+import java.time.LocalDateTime;
 
 /**
  * 租户业务对象 sys_tenant
@@ -98,7 +100,7 @@ public class SysTenantBo extends BaseEntity {
     /**
      * 过期时间
      */
-    private Date expireTime;
+    private LocalDateTime expireTime;
 
     /**
      * 用户数量（-1不限制）

@@ -22,6 +22,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.dromara.common.core.constant.Constants;
 import org.dromara.common.core.exception.ServiceException;
+import org.dromara.common.core.utils.DateUtils;
 import org.dromara.common.core.utils.SpringUtils;
 import org.dromara.common.core.utils.StreamUtils;
 import org.dromara.common.core.utils.StringUtils;
@@ -163,8 +164,8 @@ public class GenTableServiceImpl implements IGenTableService {
                 gen.setTableName(x.getName());
                 gen.setTableComment(x.getComment());
                 // postgresql的表元数据没有创建时间这个东西(好奇葩) 只能new Date代替
-                gen.setCreateTime(ObjectUtil.defaultIfNull(x.getCreateTime(), new Date()));
-                gen.setUpdateTime(x.getUpdateTime());
+                gen.setCreateTime(ObjectUtil.defaultIfNull(DateUtils.toLocalDateTime(x.getCreateTime()), DateUtils.getNowLocalDateTime()));
+                gen.setUpdateTime(DateUtils.toLocalDateTime(x.getUpdateTime()));
                 return gen;
             }).sorted(Comparator.comparing(GenTable::getCreateTime).reversed())
             .toList();
@@ -205,8 +206,8 @@ public class GenTableServiceImpl implements IGenTableService {
             gen.setDataName(dataName);
             gen.setTableName(x.getName());
             gen.setTableComment(x.getComment());
-            gen.setCreateTime(x.getCreateTime());
-            gen.setUpdateTime(x.getUpdateTime());
+            gen.setCreateTime(DateUtils.toLocalDateTime(x.getCreateTime()));
+            gen.setUpdateTime(DateUtils.toLocalDateTime(x.getUpdateTime()));
             return gen;
         }).toList();
     }

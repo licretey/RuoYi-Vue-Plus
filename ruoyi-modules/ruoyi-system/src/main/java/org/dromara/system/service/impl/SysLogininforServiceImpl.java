@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.core.constant.Constants;
+import org.dromara.common.core.utils.DateUtils;
 import org.dromara.common.core.utils.MapstructUtils;
 import org.dromara.common.core.utils.ServletUtils;
 import org.dromara.common.core.utils.StringUtils;
@@ -29,7 +30,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Date;
+
 import java.util.List;
 import java.util.Map;
 
@@ -132,7 +133,7 @@ public class SysLogininforServiceImpl implements ISysLogininforService {
     @Override
     public void insertLogininfor(SysLogininforBo bo) {
         SysLogininfor logininfor = MapstructUtils.convert(bo, SysLogininfor.class);
-        logininfor.setLoginTime(new Date());
+        logininfor.setLoginTime(DateUtils.getNowLocalDateTime());
         baseMapper.insert(logininfor);
     }
 

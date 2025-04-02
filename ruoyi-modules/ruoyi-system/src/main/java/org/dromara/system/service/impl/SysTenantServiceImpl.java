@@ -16,10 +16,7 @@ import org.dromara.common.core.constant.SystemConstants;
 import org.dromara.common.core.constant.TenantConstants;
 import org.dromara.common.core.exception.ServiceException;
 import org.dromara.common.core.service.WorkflowService;
-import org.dromara.common.core.utils.MapstructUtils;
-import org.dromara.common.core.utils.SpringUtils;
-import org.dromara.common.core.utils.StreamUtils;
-import org.dromara.common.core.utils.StringUtils;
+import org.dromara.common.core.utils.*;
 import org.dromara.common.mybatis.core.page.PageQuery;
 import org.dromara.common.mybatis.core.page.TableDataInfo;
 import org.dromara.common.redis.utils.CacheUtils;
@@ -365,7 +362,7 @@ public class SysTenantServiceImpl implements ISysTenantService {
             return true;
         }
         // 如果当前时间在过期时间之前则通过
-        return new Date().before(tenant.getExpireTime());
+        return DateUtils.getNowLocalDateTime().isBefore(tenant.getExpireTime());
     }
 
     /**

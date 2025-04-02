@@ -4,6 +4,7 @@ import cn.hutool.core.util.ArrayUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import org.dromara.common.core.utils.DateUtils;
 import org.dromara.common.core.utils.MapstructUtils;
 import org.dromara.common.core.utils.StringUtils;
 import org.dromara.common.core.utils.ip.AddressUtils;
@@ -20,7 +21,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Date;
+
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +87,7 @@ public class SysOperLogServiceImpl implements ISysOperLogService {
     @Override
     public void insertOperlog(SysOperLogBo bo) {
         SysOperLog operLog = MapstructUtils.convert(bo, SysOperLog.class);
-        operLog.setOperTime(new Date());
+        operLog.setOperTime(DateUtils.getNowLocalDateTime());
         baseMapper.insert(operLog);
     }
 

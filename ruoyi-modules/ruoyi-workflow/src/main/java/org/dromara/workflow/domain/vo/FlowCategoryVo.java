@@ -8,8 +8,9 @@ import org.dromara.workflow.domain.FlowCategory;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 
 
@@ -64,7 +65,7 @@ public class FlowCategoryVo implements Serializable {
      * 创建时间
      */
     @ExcelProperty(value = "创建时间")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 子菜单

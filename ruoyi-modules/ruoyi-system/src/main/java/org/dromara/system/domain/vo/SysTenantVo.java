@@ -1,6 +1,6 @@
 package org.dromara.system.domain.vo;
 
-import java.util.Date;
+
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import org.dromara.common.excel.annotation.ExcelDictFormat;
@@ -11,6 +11,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 /**
@@ -96,7 +97,7 @@ public class SysTenantVo implements Serializable {
      * 过期时间
      */
     @ExcelProperty(value = "过期时间")
-    private Date expireTime;
+    private LocalDateTime expireTime;
 
     /**
      * 用户数量（-1不限制）

@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.util.Date;
+
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -242,7 +242,7 @@ public class SysLoginService {
             log.info("登录租户：{} 已被停用.", tenantId);
             throw new TenantException("tenant.blocked");
         } else if (ObjectUtil.isNotNull(tenant.getExpireTime())
-            && new Date().after(tenant.getExpireTime())) {
+            && DateUtils.getNowLocalDateTime().isAfter(tenant.getExpireTime())) {
             log.info("登录租户：{} 已超过有效期.", tenantId);
             throw new TenantException("tenant.expired");
         }

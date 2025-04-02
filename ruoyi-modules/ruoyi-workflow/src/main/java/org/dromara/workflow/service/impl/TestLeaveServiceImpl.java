@@ -14,6 +14,7 @@ import org.dromara.common.core.domain.event.ProcessDeleteEvent;
 import org.dromara.common.core.domain.event.ProcessEvent;
 import org.dromara.common.core.enums.BusinessStatusEnum;
 import org.dromara.common.core.service.WorkflowService;
+import org.dromara.common.core.utils.DateUtils;
 import org.dromara.common.core.utils.MapstructUtils;
 import org.dromara.common.core.utils.StringUtils;
 import org.dromara.common.mybatis.core.domain.BaseEntity;
@@ -29,6 +30,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -101,7 +103,9 @@ public class TestLeaveServiceImpl implements ITestLeaveService {
      */
     @Override
     public TestLeaveVo insertByBo(TestLeaveBo bo) {
-        long day = DateUtil.betweenDay(bo.getStartDate(), bo.getEndDate(), true);
+//        long day = DateUtil.betweenDay(bo.getStartDate(), bo.getEndDate(), true);
+        // todo test
+        long day = Duration.between(bo.getEndDate(), bo.getStartDate()).toDays();
         // 截止日期也算一天
         bo.setLeaveDays((int) day + 1);
         TestLeave add = MapstructUtils.convert(bo, TestLeave.class);
