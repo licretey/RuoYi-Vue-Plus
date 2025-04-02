@@ -45,4 +45,5 @@ nbdist/
 !*/build/*.html
 !*/build/*.xml
 
+ruoyi-admin/src/main/resources/application-test.yml
 .flattened-pom.xml
