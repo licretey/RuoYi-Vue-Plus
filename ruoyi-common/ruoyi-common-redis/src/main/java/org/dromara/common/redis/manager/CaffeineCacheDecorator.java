@@ -55,6 +55,7 @@ public class CaffeineCacheDecorator implements Cache {
     @Override
     public void put(Object key, Object value) {
         CAFFEINE.invalidate(getUniqueKey(key));
+        // 调用redisCache更新本地与redis缓存
         cache.put(key, value);
         // 发布缓存更新消息
         RedisUtils.publish(CacheNames.CACHE_UPDATE_CHANNEL + name, getUniqueKey(key));

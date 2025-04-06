@@ -51,9 +51,9 @@ public class PlusSpringCacheManager implements CacheManager {
 
     private boolean transactionAware = true;
 
-    // 缓存组配置集合
+    // 缓存组 配置集合（缓存分组名：）
     Map<String, CacheConfig> configMap = new ConcurrentHashMap<>();
-    // 缓存实例集合
+    // 缓存组 实例集合（一个实例多个kv缓存）
     ConcurrentMap<String, Cache> instanceMap = new ConcurrentHashMap<>();
 
     /**
@@ -99,6 +99,7 @@ public class PlusSpringCacheManager implements CacheManager {
             for (String name : names) {
                 getCache(name);
             }
+            // 不动态使用缓存分组名称
             dynamic = false;
         } else {
             dynamic = true;
@@ -118,6 +119,11 @@ public class PlusSpringCacheManager implements CacheManager {
         return new CacheConfig();
     }
 
+    /**
+     *
+     * @param name 缓存分组名称
+     * @return
+     */
     @Override
     public Cache getCache(String name) {
         // 重写 cacheName 支持多参数
@@ -164,6 +170,7 @@ public class PlusSpringCacheManager implements CacheManager {
      * @return
      */
     private Cache createMap(String name, CacheConfig config) {
+        // 从redis中读取缓存组或新建一个
         RMap<Object, Object> map = RedisUtils.getClient().getMap(name);
 
         // 没有限制
@@ -177,6 +184,7 @@ public class PlusSpringCacheManager implements CacheManager {
         if (oldCache != null) {
             cache = oldCache;
         }
+        // 返回name对应的实例
         return cache;
     }
 
@@ -189,6 +197,7 @@ public class PlusSpringCacheManager implements CacheManager {
     private Cache createMapCache(String name, CacheConfig config) {
         RMapCache<Object, Object> map = RedisUtils.getClient().getMapCache(name);
 
+        // 将config配置设置到redis缓存中
         Cache cache = new CaffeineCacheDecorator(name, new RedissonCache(map, config, allowNullValues));
         if (transactionAware) {
             cache = new TransactionAwareCacheDecorator(cache);
@@ -197,11 +206,16 @@ public class PlusSpringCacheManager implements CacheManager {
         if (oldCache != null) {
             cache = oldCache;
         } else {
+            // todo ? 为什么要重新设置一次
             map.setMaxSize(config.getMaxSize());
         }
         return cache;
     }
 
+    /**
+     * 获取缓存分组名称集合
+     * @return
+     */
     @Override
     public Collection<String> getCacheNames() {
         return Collections.unmodifiableSet(configMap.keySet());
