@@ -172,3 +172,16 @@ BaseMapperPlus接口：增强了泛型参数，mybatis-plus的BaseMapper接口�
 + 对于基础类型，redis序列化时会自动转换，如100L这样的Long类型会被自动转换为Integer类型的100，**所以可能会在反序列化时失败**（可以自定义一个对象，包装一下这个类型后，使用自定义对象去序列化）
 ### 2.8 多数据源
 + 多数据源可以配置多个数据库
+
+
+## 三 后端
+### 3.7 Log日志
++ 用于记录所有外部请求在系统中的操作
++ 核心原理是通过SpringEvent完成，有两种方式
+  + @Log注解，不能在被@SaIgnore下使用（OperLogEvent）
+  + 发布事件（LogininforEvent）
+### 3.8 S3对象存储
++ 读取OssProperties配置，使用OssFactory工厂类获取对应的OssClient对象（会存储部分信息到Redis中，OssConstant），用于桶的创建销毁与文件的上传等操作（返回UploadResult）
++ Oss初始化：在SpringBoot启动后，通过继承ApplicationRunner接口，异步的在run方法中执行OssFactory的init方法，初始化所有配置的OssClient对象
++ 配置
+  + 域名不需要提供http或https，有域名优先使用域名否则使用云厂商提供的站点
