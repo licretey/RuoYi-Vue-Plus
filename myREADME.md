@@ -1,19 +1,19 @@
 [TOC]
 
-
-
 # ES_OMS
 
-
-
 ## 基础架构
+
 + todo
-## 数据库
+  
+  ## 数据库
 + es迁移
 + 添加tenant_id、create_dept
-```sql
-alter table public.es_tms_client
+  
+  ```sql
+  alter table public.es_tms_client
     add tenant_id varchar(20);
+  ```
 
 comment on column public.es_tms_client.tenant_id is '租户id';
 
@@ -21,8 +21,6 @@ alter table public.es_tms_client
     add create_dept bigint;
 
 comment on column public.es_tms_client.create_dept is '创建部门';
-
-
 
 ```
 + 修改create_by, create_time
@@ -40,8 +38,8 @@ alter table public.es_tms_order_base_change_log
 
 alter table public.es_tms_order_base_change_log
     rename column update_timestamp to update_time;
-
 ```
+
 ## 部署
 
 + 前端打包，上传服务器后解压缩到nginx配置文件指定的目录下（不指定默认是nginx的html目录下）
@@ -50,13 +48,16 @@ alter table public.es_tms_order_base_change_log
 ![image-20241017153354002](script/assets/image-20241017153354002.png)
 
 + 配置nginx.conf文件信息
+
 + 后端打jar包，后上传服务器(当前放在`~/project`下)
+
 + 执行`nohup java -jar ruoyi-admin.jar &`
 
 + 后端端口和认证端口合一为8080（可以手动修如8088，前端则必须跟着调整），cloud同理
-+ 前段项目启动有单独端口（生产默认80），通过vite代理将80端口的请求转发到后端端口（如8080）；
-+ **注意，根据环境的不同，请求地址会拼接上`dev-api`或`prod-api`（后端会通过ningx配置转为正常地址）**
 
++ 前段项目启动有单独端口（生产默认80），通过vite代理将80端口的请求转发到后端端口（如8080）；
+
++ **注意，根据环境的不同，请求地址会拼接上`dev-api`或`prod-api`（后端会通过ningx配置转为正常地址）**
 
 [TOC]
 
@@ -79,14 +80,36 @@ alter table public.es_tms_order_base_change_log
 #### (1) 通用模块的添加
 
 + common模块是插件化的，需要配置SPI注入Spring
++ 添加流程如下：
+  + 新建module，选择jdk有包路径后创建
+  + **core-pom中需要有；同时common-bom下的pom中需要引入**
+  + 创建出来的module中有description时才会有被插件提示
+  + 可以删除idea生成的jdk版本，否则不会被统一管理jdk
+  + 可以直接引用同级的core包，但注意不要相互引用
 
-  #### (2) 应用下子业务模块的添加
++ 使用：
+  + 在ruoyi-modules中任意的模块pom中引入即可
+
+
+#### (2) 应用下子业务模块的添加
+
 + common-core是业务功能的基础，一般正常创建后将其引入即可；除非该子业务无需spring的支持
-+ 将module交给父pom管理
++ 将module交给父pom即ruoyi-module的pom管理、
++ **同时需要在主pom中声明子模块的版本，然后再ruoyi-admin下引入这个子模块（不再需要声明版本）**
++ **注意包的扫描路径问题，默认是org.dromara**
 
-  #### (3) 应用模块的添加（能打jar包）
-+ 同样需要引入common-core，因为需要启动spring
-+ 其次要引入common-core-web，其中包含了web服务器
+#### (3) 应用模块的添加（能打jar包）
+
++ 同样需要引入common-core，因为需要启动springBoot
+
++ 其次要引入common-core-web，其中包含了spring-web和web服务器
+
++ 需要单独分配端口，有单独的配置文件
+
++ **包名可以随意，不用以org.dromara开始**
+
++ 被extend-pom管理
+
 + 关键需要配置打jar包插件
 
   ```xml
@@ -141,18 +164,25 @@ spring.boot.admin.client:
 ### 2.3 Utils
 
 + SpringUtils
+
 + ReflectUtils
+
 + JsonUtils
+
 + TreeUtils
+
 + StringUtils
+
 + RegionUtils
+
 + RegexUtils
-
+  
   ### 2.4 Validator
-
+  
   ### 2.5 mapstruct-plus
-
+  
   ### 2.6 mybatis-plus
+
 + 元数据填充（监听增删查改自动添加数据）：InjectMetaObjectHandler
 
 MybatisPlusConfig中配置多个插件
@@ -167,20 +197,24 @@ MybatisPlusConfig中配置多个插件
 BaseMapperPlus接口：增强了泛型参数，mybatis-plus的BaseMapper接口只支持BO，框架增强后使其支持由查询的BO查询后返回对应的VO
 
 ### 2.7 redis
+
 + 支持集群部署，需要配置多个redis节点
 + sential等其它方式需要设置redission中的配置
 + 对于基础类型，redis序列化时会自动转换，如100L这样的Long类型会被自动转换为Integer类型的100，**所以可能会在反序列化时失败**（可以自定义一个对象，包装一下这个类型后，使用自定义对象去序列化）
-### 2.8 多数据源
+  
+  ### 2.8 多数据源
 + 多数据源可以配置多个数据库
 
-
 ## 三 后端
+
 ### 3.7 Log日志
+
 + 用于记录所有外部请求在系统中的操作
 + 核心原理是通过SpringEvent完成，有两种方式
   + @Log注解，不能在被@SaIgnore下使用（OperLogEvent）
   + 发布事件（LogininforEvent）
-### 3.8 S3对象存储
+    
+    ### 3.8 S3对象存储
 + 读取OssProperties配置，使用OssFactory工厂类获取对应的OssClient对象（会存储部分信息到Redis中，OssConstant），用于桶的创建销毁与文件的上传等操作（返回UploadResult）
 + Oss初始化：在SpringBoot启动后，通过继承ApplicationRunner接口，异步的在run方法中执行OssFactory的init方法，初始化所有配置的OssClient对象
 + 配置
