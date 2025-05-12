@@ -366,6 +366,37 @@
                 <artifactId>ruoyi-demo</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <!--  业务模块  -->
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>sl-base</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>sl-bms</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>sl-dms</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>sl-oms</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>sl-sms</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>sl-wms</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <!--  工作流模块  -->
             <dependency>

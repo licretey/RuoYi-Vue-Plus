@@ -10,6 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
+        <module>sl-base</module>
+        <module>sl-bms</module>
+        <module>sl-dms</module>
+        <module>sl-oms</module>
+        <module>sl-sms</module>
+        <module>sl-wms</module>
         <module>ruoyi-demo</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-job</module>
