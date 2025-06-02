@@ -199,13 +199,143 @@ BaseMapperPlus接口：增强了泛型参数，mybatis-plus的BaseMapper接口�
 ### 2.7 redis
 
 + 支持集群部署，需要配置多个redis节点
+
 + sential等其它方式需要设置redission中的配置
+
 + 对于基础类型，redis序列化时会自动转换，如100L这样的Long类型会被自动转换为Integer类型的100，**所以可能会在反序列化时失败**（可以自定义一个对象，包装一下这个类型后，使用自定义对象去序列化）
-  
-  ### 2.8 多数据源
+
++ 缓存组名称常量 key 格式为 cacheNames#ttl#maxIdleTime#maxSize
+  + ttl 过期时间 如果设置为0则不过期 默认为0
+  + maxIdleTime 最大空闲时间 根据LRU算法清理空闲数据 如果设置为0则不检测 默认为0
+  + maxSize 组最大长度 根据LRU算法清理溢出数据 如果设置为0则无限长 默认为0
+  + 例子: test#60s、test#0#60s、test#0#1m#1000、test#1h#0#500  
+
++ 布隆过滤器：` RedisUtils.getClient().getBloomFilter("test").contains("id")`
+  + 使用前需要使用tryInit初始化一下，传入数据量大小和可接收的错误率；并将需要处理的数据提前加入进去
+
++ CacheController：redis监控组件
+
+    ### 2.8 多数据源
+
 + 多数据源可以配置多个数据库
 
-## 三 后端
+### 2.9 分布式锁Lock4j
+
++ 管理：common-redis
++ 依赖：lock4j-redission-spring-boot-starter
++ 配置：
+    + 默认获取锁最大阻塞等待时间3s；锁最大执行时间30s；
+    + 默认执行器的顺序为redission、redisTemplate、zookeeper
+    + 默认失败策略
+
++ 使用：
+
+    + @Lock4j(key)，key支持spel表达式：name+#+key
+        + name = 项目前缀+lock4j默认前缀+锁的控制器路径+锁的方法名（默认name前缀生成逻辑）；如果有name属性，会覆盖掉
+
+    + 注入LockTemplate：一个key一个锁（key名称手动传入）
+
++ 实现：
+
+    + RedissionLockExecutor：
+    + key生成实现： LockKeyBuidler-- DefaultLockKeyBuilder --LockInterceptor
+
+## 三 后端2
+
+### 3.1 Filter
+
+### 3.2 Interceptor
+
+### 3.3 WebSocket：
+
++ **全双工TCP连接**
+
++ 管理：common-websocket
++ 依赖：lock4j-redission-spring-boot-starter
++ 配置：
+    + 默认关闭，改用了sse；开启时所有地址可以访问；路径为/resource/websocket
+    + 前端配置：VITE_APP_WEBSOCKET
++ 使用：
+    + 地址：ws://localhost:8080/dev-api/resouce/websocket (端口和http一样，加密时使用wss://xxx)
+    + 需要配置token：登录后获取Authorization和ClientId，如?Authorization=Bear ac32xad...&clientid=ex32afa...
+    + 框架当前的行为配置为：返回接收到的相同信息
+    + 案例：WeSocketController
+    + **每个后台服务端会维护客户与session对应关系的连接池；当集群部署时如果本服务中找不到，则需要调整使用redis的发布订阅模式来通知其它后台服务，哪个服务中存在就取出session进行消息的推送**
+    + **一个客户的多个客户端只有一个有效**
++ 实现：
+    + 前端：websocket.ts在layout/index.vue的生命周期中初始化
+    + 后端：
+        + 配置类WebSocketConfig：配置拦截器到资源路径下，并设置处理器和允许访问的源
+        + 握手拦截器PlusWebSocketInterceptor：通过判断3个clientid是否相同校验握手是否成功
+        + Websocket处理器PlusWebSocketHandler：对session进一步校验，成功则将session放入会话池
+        + 集群订阅器WebSocketTopicListener：所有服务都会监听，消除接收到后从本地会话池中获取接收方有则发送
+
+### 3.4 SSE：
+
++ **仅服务端向客户端发送，单向；配合http可以实现双向**
+
++ 管理：common-sse
++ 依赖：spring自带，引入common-core即可
++ 配置：
+    + 默认开启；所有地址可以访问；路径为/resource/sse
+    + 前端配置：VITE_APP_SSE
++ 使用：
+    + 地址：http://localhost:8080/dev-api/resouce/sse(端口和http一样，加密时使用wss://xxx)
+    + 后台提供一个http接口接收客户端请求，然后使用sse通知到前端完成全双工；单向只需要调用sse发送即可
+    + **一个客户的多个客户端可以同时有效**
++ 实现：
+    + 前端：sse.ts在layout/index.vue的生命周期中初始化
+    + 后端：
+        + 连接管理器SseEmitterManager：
+        + 集群订阅器SseTopicListener
+        + 连接控制器SseController：发送、关闭等操作；
+
+### 3.5 Sensitive脱敏
+
++ 管理：common-sensitive
++ 依赖：仅引入common-json
++ 配置：
++ 使用：
+    + @Sensitive：rolekey标明排除脱敏的角色（不提供则仅排除管理员）; perms标明排除脱敏的权限；同时存在时需要同时满足才不会脱敏
+    + **脱敏排除了管理员和租户管理员；只能用于字符串；是在序列化时进行的脱敏处理**
+    + 实现： 
+        + SensitiveHandler定义了对角色、权限的脱敏策略；实现了ContextualSerializer只拦截String类型的字段；
+        + 主要通过SysSensitiveServiceImpl中的方法isSensitive判断用户是否需要脱敏，为false不脱敏
+        + SensitiveStrategy通过引入hutool的工具类进行的字符串的脱敏处理操作
+
+### 3.6 encrypt加解密
+
+```
++ 管理：
++ 依赖：
++ 配置：
++ 使用：
++ 实现：
+    + 后端：
+    + 前端：
+```
+
+
+
++ 管理：common-encrypt
++ 依赖：bcprov-jdk15to18国密支持，hutool-crypt
++ 配置：
+    + 数据库加密未开启，默认算法是Base64的方式，不算是加密，可以根据需要调整配置；对称式需要配置密钥，非对称需要同时配置公钥私钥、
+    + API加密默认开启，AES密钥会使用Base64编码后使用RSA非对称加密，传输到后端使用RSA解密再解码拿到AES密钥（配置文件中公钥用于响应的加密返回给前端；私钥用于解密前端传输过来的请求数据）
++ 使用：
+    + @ApiEncrypt，默认false即不对响应加密，只解密前端加密的请求数据
++ 实现：
+    + 前端：
+        + API_APP_ENCRYPT设置是否开启加密，需要和后端配置同步
+        + 再request.ts中的请求拦截器中，前端如果请求头中设置了加密则生成AES密钥密钥后进行加密处理（AES密钥）,对请求的数据用AES加密后传输
+    + 后端：
+        + ApiDecryptAutoConfiguration配置了API加密的Filter实现CryptoFilter
+        + API请求解密包装类DecryptRequestBodyWrapper用于实际的解密操作
+        + API响应返回加密包装类EncryptResponseBodyWrapper用于实际的加密操作
+        + EncryptorAutoConfiguration配置了对数据库的加解密操作
+        + 加密字段的缓存管理器EncryptorManager
+        + 入参加密拦截器MybatisEncryptInterceptor
+        + 出参解密拦截器MybatisDecryptInterceptor
 
 ### 3.7 Log日志
 
@@ -213,8 +343,10 @@ BaseMapperPlus接口：增强了泛型参数，mybatis-plus的BaseMapper接口�
 + 核心原理是通过SpringEvent完成，有两种方式
   + @Log注解，不能在被@SaIgnore下使用（OperLogEvent）
   + 发布事件（LogininforEvent）
-    
-    ### 3.8 S3对象存储
++ **LogBack**
+
+### 3.8 S3对象存储
+
 + 读取OssProperties配置，使用OssFactory工厂类获取对应的OssClient对象（会存储部分信息到Redis中，OssConstant），用于桶的创建销毁与文件的上传等操作（返回UploadResult）
 + Oss初始化：在SpringBoot启动后，通过继承ApplicationRunner接口，异步的在run方法中执行OssFactory的init方法，初始化所有配置的OssClient对象
 + 配置

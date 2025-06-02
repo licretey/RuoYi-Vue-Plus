@@ -24,6 +24,7 @@ public class SseEmitterManager {
      */
     private final static String SSE_TOPIC = "global:sse";
 
+    // 记录 userid token SseEmitter；保证一个用户的多个token可以同时有效
     private final static Map<Long, Map<String, SseEmitter>> USER_TOKEN_EMITTERS = new ConcurrentHashMap<>();
 
     /**

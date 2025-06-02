@@ -63,6 +63,7 @@ public class CryptoFilter implements Filter {
 
         // 判断是否响应加密
         if (responseFlag) {
+            // 包装类中此时未进行加密，只是在下方任务链完成后对响应进行加密
             responseBodyWrapper = new EncryptResponseBodyWrapper(servletResponse);
             responseWrapper = responseBodyWrapper;
         }
@@ -83,6 +84,13 @@ public class CryptoFilter implements Filter {
 
     /**
      * 获取 ApiEncrypt 注解
+     *
+     * RequestMappingHandlerMapping维护了所有 @RequestMapping（或派生注解）映射到的方法
+     * getHandler(request) 根据 URL 和请求方法（GET、POST等）查找匹配的 HandlerExecutionChain
+     *
+     * HandlerExecutionChain.getHandler()通常是一个 HandlerMethod 对象，封装了 Controller Bean 和其具体方法
+     *
+     * handlerMethod.getMethodAnnotation(ApiEncrypt.class)再利用反射获取注解
      */
     private ApiEncrypt getApiEncryptAnnotation(HttpServletRequest servletRequest) {
         RequestMappingHandlerMapping handlerMapping = SpringUtils.getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);

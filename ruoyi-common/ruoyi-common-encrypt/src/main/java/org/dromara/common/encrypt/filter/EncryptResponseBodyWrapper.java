@@ -28,6 +28,10 @@ public class EncryptResponseBodyWrapper extends HttpServletResponseWrapper {
         this.printWriter = new PrintWriter(new OutputStreamWriter(byteArrayOutputStream));
     }
 
+    /**
+     * 需要重写，用于读取响应体的字节数组
+     * @return
+     */
     @Override
     public PrintWriter getWriter() {
         return printWriter;
@@ -80,7 +84,7 @@ public class EncryptResponseBodyWrapper extends HttpServletResponseWrapper {
         servletResponse.addHeader("Access-Control-Expose-Headers", headerFlag);
         servletResponse.setHeader("Access-Control-Allow-Origin", "*");
         servletResponse.setHeader("Access-Control-Allow-Methods", "*");
-        servletResponse.setHeader(headerFlag, encryptPassword);
+        servletResponse.setHeader(headerFlag, encryptPassword); // 将密钥传输到前端
         servletResponse.setCharacterEncoding(StandardCharsets.UTF_8.toString());
 
 
@@ -90,6 +94,11 @@ public class EncryptResponseBodyWrapper extends HttpServletResponseWrapper {
         return EncryptUtils.encryptByAes(originalBody, aesPassword);
     }
 
+
+    /**
+     * 需要重写，用于读取响应体的字节数组
+     * @return
+     */
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
         return new ServletOutputStream() {

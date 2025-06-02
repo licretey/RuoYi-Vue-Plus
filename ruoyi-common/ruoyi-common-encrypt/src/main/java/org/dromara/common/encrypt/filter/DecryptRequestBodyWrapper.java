@@ -39,6 +39,10 @@ public class DecryptRequestBodyWrapper extends HttpServletRequestWrapper {
         body = decryptBody.getBytes(StandardCharsets.UTF_8);
     }
 
+    /**
+     * 需要重写，用于读取请求体的字节数组
+     * @return
+     */
     @Override
     public BufferedReader getReader() {
         return new BufferedReader(new InputStreamReader(getInputStream()));
@@ -61,6 +65,10 @@ public class DecryptRequestBodyWrapper extends HttpServletRequestWrapper {
     }
 
 
+    /**
+     * 需要重写，用于读取请求体的字节数组
+     * @return
+     */
     @Override
     public ServletInputStream getInputStream() {
         final ByteArrayInputStream bais = new ByteArrayInputStream(body);

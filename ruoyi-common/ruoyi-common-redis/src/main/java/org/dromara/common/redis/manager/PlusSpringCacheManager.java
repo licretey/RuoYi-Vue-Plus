@@ -47,6 +47,7 @@ public class PlusSpringCacheManager implements CacheManager {
 
     private boolean dynamic = true;
 
+    // 防止缓存穿透
     private boolean allowNullValues = true;
 
     private boolean transactionAware = true;
@@ -122,6 +123,8 @@ public class PlusSpringCacheManager implements CacheManager {
     /**
      *
      * @param name 缓存分组名称
+     *       由4部分组成：名称、过期时间、最大空闲时间、条数
+     *             如test#0#0#0 表示不会过期、最大空闲时间无限、不限条数
      * @return
      */
     @Override
