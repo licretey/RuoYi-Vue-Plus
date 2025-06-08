@@ -318,12 +318,16 @@ BaseMapperPlus接口：增强了泛型参数，mybatis-plus的BaseMapper接口�
 
 
 + 管理：common-encrypt
+
 + 依赖：bcprov-jdk15to18国密支持，hutool-crypt
+
 + 配置：
     + 数据库加密未开启，默认算法是Base64的方式，不算是加密，可以根据需要调整配置；对称式需要配置密钥，非对称需要同时配置公钥私钥、
     + API加密默认开启，AES密钥会使用Base64编码后使用RSA非对称加密，传输到后端使用RSA解密再解码拿到AES密钥（配置文件中公钥用于响应的加密返回给前端；私钥用于解密前端传输过来的请求数据）
+
 + 使用：
     + @ApiEncrypt，默认false即不对响应加密，只解密前端加密的请求数据
+
 + 实现：
     + 前端：
         + API_APP_ENCRYPT设置是否开启加密，需要和后端配置同步
@@ -336,6 +340,31 @@ BaseMapperPlus接口：增强了泛型参数，mybatis-plus的BaseMapper接口�
         + 加密字段的缓存管理器EncryptorManager
         + 入参加密拦截器MybatisEncryptInterceptor
         + 出参解密拦截器MybatisDecryptInterceptor
+
+    > 》》**数据库加解密**
+
++ 管理：common-encrypt
+
++ 依赖：bcprov-jdk15to18国密支持，hutool-crypt
+
++ 配置：mybatis-encryptor.enable为ture时开启，默认关闭； 加密方式是Base64；
+
++ 使用：在字符串类型上增加@EncryptField注解即可
+
++ 实现：
+    + 后端：
+
+        + EncryptorAutoConfiguration配置中注入了EncryptorManager，EncryptorManager初始化时它的scanEncryptClasses会扫描加密实体中的加密加密字段放入缓存；
+
+        + IEncryptor为加密执行者，AbstractEncryptor继承自IEncryptor，各种加密算法实现了AbstractEncryptor；
+
+        + EncryptorAutoConfiguration同时注入了MybatisEncryptInterceptor和MybatisDecryptInterceptor，拦截器在拦截到字段时调用EncryptorManager中的加解密方法（scanEncryptClasses的扫描缓存记录中记录了加解密字段和算法）
+
+        + ```
+            
+            ```
+
+        
 
 ### 3.7 Log日志
 
@@ -351,3 +380,30 @@ BaseMapperPlus接口：增强了泛型参数，mybatis-plus的BaseMapper接口�
 + Oss初始化：在SpringBoot启动后，通过继承ApplicationRunner接口，异步的在run方法中执行OssFactory的init方法，初始化所有配置的OssClient对象
 + 配置
   + 域名不需要提供http或https，有域名优先使用域名否则使用云厂商提供的站点
+
+### 3.9 Execel
+
++ 管理：
+
++ 依赖：easyexcel、common-json
+
++ 配置：
+
++ 使用：
+
+    + @ExcelProperty：value指定表头，order指定字段在表中的顺序，而index指定列高于order（从0开始） ，convert指定转换器
+    + @ExcelIngore、@ExcelIgnoreUnannotated：忽略要导出的字段，可以直接使用@ExcelIngore，也可使用@ExcelIgnoreUnannotated后不使用@ExcelProperty
+    + @DatetimeFormat：使用指定格式解析exel中string类型的日期
+    + @NumberFormat：使用指定格式解析excel中的数字
+
+    实现：
+    + 后端：
+        + 字典格式化器ExcelDictFormat--ExcelDictConvert，枚举格式化器ExcelEnumFormat--ExcelEnumConvert
+        + 单元格合并器CellMergeStrategy
+        + 大数值转字符串ExcelBigNumberConvert：防止数字失真
+        + 下拉框选择器DropDownOptions：字典、枚举、数据库数据的下拉选择（实际的实现ExcelDownHandler）
+        + 导入的结果对象实现DefaultExcelResult；导入时对数据的监听器DefaultExcelListener
+
+```
+
+```

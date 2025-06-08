@@ -47,6 +47,7 @@ public class MybatisEncryptInterceptor implements Interceptor {
 
     @Override
     public Object plugin(Object target) {
+        // 目标在mybatis plus中的ParameterHandler参数处理器中
         if (target instanceof ParameterHandler parameterHandler) {
             // 进行加密操作
             Object parameterObject = parameterHandler.getParameterObject();
@@ -89,6 +90,7 @@ public class MybatisEncryptInterceptor implements Interceptor {
         }
         try {
             for (Field field : fields) {
+                // 反射的方式加密后去更新字段中的所有值（前面设置的field.setAccessible(true);）
                 field.set(sourceObject, this.encryptField(Convert.toStr(field.get(sourceObject)), field));
             }
         } catch (Exception e) {

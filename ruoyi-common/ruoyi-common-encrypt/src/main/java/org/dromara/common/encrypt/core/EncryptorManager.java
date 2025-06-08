@@ -64,6 +64,8 @@ public class EncryptorManager {
     /**
      * 注册加密执行者到缓存
      *
+     * IEncryptor：加密执行者
+     *
      * @param encryptContext 加密执行者需要的相关配置参数
      */
     public IEncryptor registAndGetEncryptor(EncryptContext encryptContext) {

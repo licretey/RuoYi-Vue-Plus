@@ -27,8 +27,11 @@ import java.util.*;
  */
 @Slf4j
 @Intercepts({@Signature(
+    // 需要拦截的类
     type = ResultSetHandler.class,
+    // 需要拦截的类上的方法
     method = "handleResultSets",
+    // 需要拦截的类中方法的参数类型
     args = {Statement.class})
 })
 @AllArgsConstructor
@@ -37,6 +40,7 @@ public class MybatisDecryptInterceptor implements Interceptor {
     private final EncryptorManager encryptorManager;
     private final EncryptorProperties defaultProperties;
 
+    // 拦截器的调用者，即handleResultSets
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         // 获取执行mysql执行结果
