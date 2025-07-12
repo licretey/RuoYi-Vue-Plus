@@ -74,6 +74,7 @@ public class ExcelEnumConvert implements Converter<Object> {
         Map<Object, String> enumValueMap = new HashMap<>();
         Enum<?>[] enumConstants = anno.enumClass().getEnumConstants();
         for (Enum<?> enumConstant : enumConstants) {
+            // 从枚举中获取code字段和text字段
             Object codeValue = ReflectUtils.invokeGetter(enumConstant, anno.codeField());
             String textValue = ReflectUtils.invokeGetter(enumConstant, anno.textField());
             enumValueMap.put(codeValue, textValue);

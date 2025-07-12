@@ -383,7 +383,7 @@ BaseMapperPlus接口：增强了泛型参数，mybatis-plus的BaseMapper接口�
 
 ### 3.9 Execel
 
-+ 管理：
++ 管理：common-excel
 
 + 依赖：easyexcel、common-json
 
@@ -396,11 +396,12 @@ BaseMapperPlus接口：增强了泛型参数，mybatis-plus的BaseMapper接口�
     + @DatetimeFormat：使用指定格式解析exel中string类型的日期
     + @NumberFormat：使用指定格式解析excel中的数字
 
-    实现：
+
++ 实现：
     + 后端：
         + 字典格式化器ExcelDictFormat--ExcelDictConvert，枚举格式化器ExcelEnumFormat--ExcelEnumConvert
         + 单元格合并器CellMergeStrategy
-        + 大数值转字符串ExcelBigNumberConvert：防止数字失真
+        + 大数值转字符串ExcelBigNumberConvert：防止数字失真；工具类中注册进去就会生效
         + 下拉框选择器DropDownOptions：字典、枚举、数据库数据的下拉选择（实际的实现ExcelDownHandler）
         + 导入的结果对象实现DefaultExcelResult；导入时对数据的监听器DefaultExcelListener
 

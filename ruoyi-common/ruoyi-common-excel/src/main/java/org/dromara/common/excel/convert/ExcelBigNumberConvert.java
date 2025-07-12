@@ -36,6 +36,7 @@ public class ExcelBigNumberConvert implements Converter<Long> {
         return Convert.toLong(cellData.getData());
     }
 
+    // 将Long类型的数据判断长度，超过15位转为字符串，否则使用数字
     @Override
     public WriteCellData<Object> convertToExcelData(Long object, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
         if (ObjectUtil.isNotNull(object)) {
