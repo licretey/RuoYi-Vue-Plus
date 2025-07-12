@@ -165,6 +165,13 @@
                 <version>${revision}</version>
             </dependency>
 
+            <!-- 多时区模块 -->
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>ruoyi-common-timezone</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
             <!-- WebSocket模块 -->
             <dependency>
                 <groupId>org.dromara</groupId>
