@@ -58,6 +58,9 @@ public interface GenConstants {
     String[] COLUMNTYPE_TIME = {"datetime", "time", "date", "timestamp", "year", "interval",
         "smalldatetime", "datetime2", "datetimeoffset", "timestamptz"};
 
+
+    String[] COLUMNTYPE_BOOLEAN = {"bool", "boolean"};
+
     /**
      * 数据库数字类型
      */
@@ -166,6 +169,10 @@ public interface GenConstants {
 
     String[] COLUMNTYPE_DECIMAL = {"decimal"};
 
+    /**
+     * Boolean类型
+     */
+    String TYPE_BOOLEAN = "Boolean";
 
     /**
      * 时间类型

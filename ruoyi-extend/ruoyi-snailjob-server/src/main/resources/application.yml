@@ -36,4 +36,4 @@ management:
     health:
       show-details: ALWAYS
     logfile:
-      external-file: ./logs/ruoyi-snailjob-server/console.log
+      external-file: ../logs/ruoyi-snailjob-server/console.log
