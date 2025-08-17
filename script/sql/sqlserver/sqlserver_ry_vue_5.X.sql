@@ -10,9 +10,9 @@ create table sys_social
     nick_name          nvarchar(30)      DEFAULT ('')   NULL,
     email              nvarchar(255)     DEFAULT ('')   NULL,
     avatar             nvarchar(500)     DEFAULT ('')   NULL,
-    access_token       nvarchar(255)     NOT NULL,
+    access_token       nvarchar(2000)    NOT NULL,
     expire_in          bigint            NULL,
-    refresh_token      nvarchar(255)     NULL,
+    refresh_token      nvarchar(2000)    NULL,
     access_code        nvarchar(255)     NULL,
     union_id           nvarchar(255)     NULL,
     scope              nvarchar(255)     NULL,
@@ -379,7 +379,7 @@ CREATE TABLE sys_tenant_package
 (
     package_id            bigint                          NOT NULL,
     package_name          nvarchar(20)                    NOT NULL,
-    menu_ids              nvarchar(20)                    NULL,
+    menu_ids              nvarchar(3000)                  NULL,
     remark                nvarchar(200)                   NULL,
     menu_check_strictly   tinyint         DEFAULT ((1))   NULL,
     status                nchar(1)        DEFAULT ('0')   NULL,
@@ -1239,7 +1239,7 @@ INSERT sys_dict_data VALUES (18, N'000000', 1, N'新增', N'1', N'sys_oper_type'
 GO
 INSERT sys_dict_data VALUES (19, N'000000', 2, N'修改', N'2', N'sys_oper_type', N'', N'info', N'N', 103, 1, getdate(), NULL, NULL, N'修改操作')
 GO
-INSERT sys_dict_data VALUES (20, N'000000', 3, N'删除', N3, N'sys_oper_type', N'', N'danger', N'N', 103, 1, getdate(), NULL, NULL, N'删除操作')
+INSERT sys_dict_data VALUES (20, N'000000', 3, N'删除', N'3', N'sys_oper_type', N'', N'danger', N'N', 103, 1, getdate(), NULL, NULL, N'删除操作')
 GO
 INSERT sys_dict_data VALUES (21, N'000000', 4, N'授权', N'4', N'sys_oper_type', N'', N'primary', N'N', 103, 1, getdate(), NULL, NULL, N'授权操作')
 GO
@@ -1265,15 +1265,15 @@ INSERT sys_dict_data VALUES (32, N'000000', 0, N'邮件认证', N'email', N'sys_
 GO
 INSERT sys_dict_data VALUES (33, N'000000', 0, N'小程序认证', N'xcx', N'sys_grant_type', N'', N'default', N'N', 103, 1, getdate(), NULL, NULL, N'小程序认证')
 GO
-INSERT sys_dict_data VALUES (34, N'000000', 0, N'三方登录认证', N'`social`', N'sys_grant_type', N'', N'default', N'N', 103, 1, getdate(), NULL, NULL, N'三方登录认证')
+INSERT sys_dict_data VALUES (34, N'000000', 0, N'三方登录认证', N'social', N'sys_grant_type', N'', N'default', N'N', 103, 1, getdate(), NULL, NULL, N'三方登录认证')
 GO
-INSERT sys_dict_data VALUES (35, N'000000', 0, N'PC', N'`pc`', N'sys_device_type', N'', N'default', N'N', 103, 1, getdate(), NULL, NULL, N'PC')
+INSERT sys_dict_data VALUES (35, N'000000', 0, N'PC', N'pc', N'sys_device_type', N'', N'default', N'N', 103, 1, getdate(), NULL, NULL, N'PC')
 GO
-INSERT sys_dict_data VALUES (36, N'000000', 0, N'安卓', N'`android`', N'sys_device_type', N'', N'default', N'N', 103, 1, getdate(), NULL, NULL, N'安卓')
+INSERT sys_dict_data VALUES (36, N'000000', 0, N'安卓', N'android', N'sys_device_type', N'', N'default', N'N', 103, 1, getdate(), NULL, NULL, N'安卓')
 GO
-INSERT sys_dict_data VALUES (37, N'000000', 0, N'iOS', N'`ios`', N'sys_device_type', N'', N'default', N'N', 103, 1, getdate(), NULL, NULL, N'iOS')
+INSERT sys_dict_data VALUES (37, N'000000', 0, N'iOS', N'ios', N'sys_device_type', N'', N'default', N'N', 103, 1, getdate(), NULL, NULL, N'iOS')
 GO
-INSERT sys_dict_data VALUES (38, N'000000', 0, N'小程序', N'`xcx`', N'sys_device_type', N'', N'default', N'N', 103, 1, getdate(), NULL, NULL, N'小程序')
+INSERT sys_dict_data VALUES (38, N'000000', 0, N'小程序', N'xcx', N'sys_device_type', N'', N'default', N'N', 103, 1, getdate(), NULL, NULL, N'小程序')
 GO
 
 CREATE TABLE sys_dict_type
@@ -1690,6 +1690,17 @@ INSERT sys_menu VALUES (122, N'租户套餐管理', 6, 2, N'tenantPackage', N'sy
 GO
 INSERT sys_menu VALUES (123, N'客户端管理', 1, 11, N'client', N'system/client/index', N'', 1, 0, N'C', N'0', N'0', N'system:client:list', N'international', 103, 1, getdate(), NULL, NULL, N'客户端管理菜单')
 GO
+INSERT sys_menu VALUES (116, N'修改生成配置',  3,   2, N'gen-edit/index/:tableId', N'tool/gen/editTable', N'', 1, 1, N'C', N'1', N'0', N'tool:gen:edit',           N'#',               103, 1, getdate(), null, null, N'');
+GO
+INSERT sys_menu VALUES (130, N'分配用户',     1,   2, N'role-auth/user/:roleId', N'system/role/authUser', N'', 1, 1, N'C', N'1', N'0', N'system:role:edit',      N'#',               103, 1, getdate(), null, null, N'');
+GO
+INSERT sys_menu VALUES (131, N'分配角色',     1,   1, N'user-auth/role/:userId', N'system/user/authRole', N'', 1, 1, N'C', N'1', N'0', N'system:user:edit',      N'#',               103, 1, getdate(), null, null, N'');
+GO
+INSERT sys_menu VALUES (132, N'字典数据',     1,   6, N'dict-data/index/:dictId', N'system/dict/data', N'', 1, 1, N'C', N'1', N'0', N'system:dict:list',         N'#',               103, 1, getdate(), null, null, N'');
+GO
+INSERT sys_menu VALUES (133, N'文件配置管理',  1,   10, N'oss-config/index',              N'system/oss/config', N'', 1, 1, N'C', N'1', N'0', N'system:ossConfig:list',  N'#',                103, 1, getdate(), null, null, N'');
+GO
+
 INSERT sys_menu VALUES (117, N'Admin监控', 2, 5, N'Admin', N'monitor/admin/index', N'', 1, 0, N'C', N'0', N'0', N'monitor:admin:list', N'dashboard', 103, 1, getdate(), NULL, NULL, N'Admin监控菜单');
 GO
 INSERT sys_menu VALUES (118, N'文件管理', 1, 10, N'oss', N'system/oss/index', N'', 1, 0, N'C', '0', N'0', N'system:oss:list', N'upload', 103, 1, getdate(), NULL, NULL, N'文件管理菜单');
@@ -2483,6 +2494,14 @@ INSERT sys_role_menu VALUES (3, 118);
 GO
 INSERT sys_role_menu VALUES (3, 123);
 GO
+INSERT sys_role_menu VALUES (3, 130);
+GO
+INSERT sys_role_menu VALUES (3, 131);
+GO
+INSERT sys_role_menu VALUES (3, 132);
+GO
+INSERT sys_role_menu VALUES (3, 133);
+GO
 INSERT sys_role_menu VALUES (3, 500);
 GO
 INSERT sys_role_menu VALUES (3, 501);
@@ -2629,9 +2648,15 @@ INSERT sys_role_menu VALUES (3, 1622);
 GO
 INSERT sys_role_menu VALUES (3, 1623);
 GO
+INSERT sys_role_menu VALUES (3, 11616);
+GO
 INSERT sys_role_menu VALUES (3, 11618);
 GO
 INSERT sys_role_menu VALUES (3, 11619);
+GO
+INSERT sys_role_menu VALUES (3, 11622);
+GO
+INSERT sys_role_menu VALUES (3, 11623);
 GO
 INSERT sys_role_menu VALUES (3, 11629);
 GO
@@ -2650,6 +2675,8 @@ GO
 INSERT sys_role_menu VALUES (3, 11642);
 GO
 INSERT sys_role_menu VALUES (3, 11643);
+GO
+INSERT sys_role_menu VALUES (3, 11701);
 GO
 INSERT sys_role_menu VALUES (4, 5);
 GO
@@ -3180,7 +3207,7 @@ INSERT INTO sys_oss_config VALUES (N'1', N'000000', N'minio', N'ruoyi',         
 GO
 INSERT INTO sys_oss_config VALUES (N'2', N'000000', N'qiniu', N'XXXXXXXXXXXXXXXX', N'XXXXXXXXXXXXXXX', N'ruoyi',            N'', N's3-cn-north-1.qiniucs.com',         N'',N'N', N'',           N'1', N'1', N'', 103, 1, getdate(), 1, getdate(), NULL)
 GO
-INSERT INTO sys_oss_config VALUES (N3, N'000000', N'aliyun', N'XXXXXXXXXXXXXXX', N'XXXXXXXXXXXXXXX', N'ruoyi',            N'', N'oss-cn-beijing.aliyuncs.com',       N'',N'N', N'',           N'1', N'1', N'', 103, 1, getdate(), 1, getdate(), NULL)
+INSERT INTO sys_oss_config VALUES (N'3', N'000000', N'aliyun', N'XXXXXXXXXXXXXXX', N'XXXXXXXXXXXXXXX', N'ruoyi',            N'', N'oss-cn-beijing.aliyuncs.com',       N'',N'N', N'',           N'1', N'1', N'', 103, 1, getdate(), 1, getdate(), NULL)
 GO
 INSERT INTO sys_oss_config VALUES (N'4', N'000000', N'qcloud', N'XXXXXXXXXXXXXXX', N'XXXXXXXXXXXXXXX', N'ruoyi-1250000000', N'', N'cos.ap-beijing.myqcloud.com',       N'',N'N', N'ap-beijing', N'1', N'1', N'', 103, 1, getdate(), 1, getdate(), NULL)
 GO

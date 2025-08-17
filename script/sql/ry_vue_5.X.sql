@@ -13,10 +13,10 @@ create table sys_social
     nick_name          varchar(30)      default ''      comment '用户昵称',
     email              varchar(255)     default ''      comment '用户邮箱',
     avatar             varchar(500)     default ''      comment '头像地址',
-    access_token       varchar(255)     not null        comment '用户的授权令牌',
+    access_token       varchar(2000)     not null       comment '用户的授权令牌',
     expire_in          int              default null    comment '用户的授权令牌的有效期，部分平台可能没有',
     refresh_token      varchar(255)     default null    comment '刷新令牌，部分平台可能没有',
-    access_code        varchar(255)     default null    comment '平台的授权信息，部分平台可能没有',
+    access_code        varchar(2000)     default null   comment '平台的授权信息，部分平台可能没有',
     union_id           varchar(255)     default null    comment '用户的 unionid',
     scope              varchar(255)     default null    comment '授予的权限，部分平台可能没有',
     token_type         varchar(255)     default null    comment '个别平台的授权信息，部分平台可能没有',
@@ -282,6 +282,11 @@ insert into sys_menu values('115',  '代码生成',     '3',   '2', 'gen',      
 insert into sys_menu values('121',  '租户管理',     '6',   '1', 'tenant',           'system/tenant/index',          '', 1, 0, 'C', '0', '0', 'system:tenant:list',          'list',          103, 1, sysdate(), null, null, '租户管理菜单');
 insert into sys_menu values('122',  '租户套餐管理',  '6',   '2', 'tenantPackage',    'system/tenantPackage/index',   '', 1, 0, 'C', '0', '0', 'system:tenantPackage:list',   'form',          103, 1, sysdate(), null, null, '租户套餐管理菜单');
 insert into sys_menu values('123',  '客户端管理',   '1',   '11', 'client',           'system/client/index',          '', 1, 0, 'C', '0', '0', 'system:client:list',          'international', 103, 1, sysdate(), null, null, '客户端管理菜单');
+insert into sys_menu values('116', '修改生成配置',  '3',   '2', 'gen-edit/index/:tableId', 'tool/gen/editTable', '', 1, 1, 'C', '1', '0', 'tool:gen:edit',           '#',               103, 1, sysdate(), null, null, '');
+insert into sys_menu values('130', '分配用户',     '1',   '2', 'role-auth/user/:roleId', 'system/role/authUser', '', 1, 1, 'C', '1', '0', 'system:role:edit',      '#',               103, 1, sysdate(), null, null, '');
+insert into sys_menu values('131', '分配角色',     '1',   '1', 'user-auth/role/:userId', 'system/user/authRole', '', 1, 1, 'C', '1', '0', 'system:user:edit',      '#',               103, 1, sysdate(), null, null, '');
+insert into sys_menu values('132', '字典数据',     '1',   '6', 'dict-data/index/:dictId', 'system/dict/data', '', 1, 1, 'C', '1', '0', 'system:dict:list',         '#',               103, 1, sysdate(), null, null, '');
+insert into sys_menu values('133', '文件配置管理',  '1',   '10', 'oss-config/index',              'system/oss/config', '', 1, 1, 'C', '1', '0', 'system:ossConfig:list',  '#',                103, 1, sysdate(), null, null, '');
 
 -- springboot-admin监控
 insert into sys_menu values('117',  'Admin监控',   '2',   '5',  'Admin',            'monitor/admin/index',         '', 1, 0, 'C', '0', '0', 'monitor:admin:list',           'dashboard',     103, 1, sysdate(), null, null, 'Admin监控菜单');
@@ -443,6 +448,10 @@ insert into sys_role_menu values ('3', '107');
 insert into sys_role_menu values ('3', '108');
 insert into sys_role_menu values ('3', '118');
 insert into sys_role_menu values ('3', '123');
+insert into sys_role_menu values ('3', '130');
+insert into sys_role_menu values ('3', '131');
+insert into sys_role_menu values ('3', '132');
+insert into sys_role_menu values ('3', '133');
 insert into sys_role_menu values ('3', '500');
 insert into sys_role_menu values ('3', '501');
 insert into sys_role_menu values ('3', '1001');
@@ -516,8 +525,11 @@ insert into sys_role_menu values ('3', '1620');
 insert into sys_role_menu values ('3', '1621');
 insert into sys_role_menu values ('3', '1622');
 insert into sys_role_menu values ('3', '1623');
+insert into sys_role_menu values ('3', '11616');
 insert into sys_role_menu values ('3', '11618');
 insert into sys_role_menu values ('3', '11619');
+insert into sys_role_menu values ('3', '11622');
+insert into sys_role_menu values ('3', '11623');
 insert into sys_role_menu values ('3', '11629');
 insert into sys_role_menu values ('3', '11632');
 insert into sys_role_menu values ('3', '11633');
@@ -527,6 +539,7 @@ insert into sys_role_menu values ('3', '11640');
 insert into sys_role_menu values ('3', '11641');
 insert into sys_role_menu values ('3', '11642');
 insert into sys_role_menu values ('3', '11643');
+insert into sys_role_menu values ('3', '11701');
 insert into sys_role_menu values ('4', '5');
 insert into sys_role_menu values ('4', '1500');
 insert into sys_role_menu values ('4', '1501');
