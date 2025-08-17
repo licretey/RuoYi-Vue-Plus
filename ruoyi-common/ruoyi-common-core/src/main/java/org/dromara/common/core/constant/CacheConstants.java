@@ -27,4 +27,9 @@ public interface CacheConstants {
      */
     String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
 
+    /**
+     * 缓存同步主题 redis key
+     */
+    String CACHE_SYNC_TOPIC = "cache:sync:topic";
+
 }

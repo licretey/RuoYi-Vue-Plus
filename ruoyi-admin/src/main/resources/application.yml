@@ -237,6 +237,22 @@ lock4j:
   # 分布式锁的超时时间，默认为 30 秒
   expire: 30000
 
+--- # 缓存同步配置
+cache:
+  sync:
+    # 是否启用分布式缓存同步，默认启用
+    enabled: false
+    # 严格同步配置
+    strict:
+      # 是否启用严格缓存同步，默认关闭（性能优先）
+      enabled: false
+      # 严格同步默认超时时间（毫秒）
+      timeout: 3000
+      # 严格同步重试次数
+      retryCount: 3
+      # 严格同步批处理大小
+      batchSize: 100
+
 --- # Actuator 监控端点的配置项
 management:
   endpoints:
