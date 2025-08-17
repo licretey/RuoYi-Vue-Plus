@@ -12,23 +12,32 @@ import java.io.Serializable;
  * @date 2025-02-28
  */
 @Data
-public class ButtonPermission implements Serializable {
+public class ButtonPermissionVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 枚举路径
+     * 唯一编码
      */
     private String code;
 
     /**
-     * 按钮编码
+     * 选项值
      */
     private String value;
 
     /**
      * 是否显示
      */
-    private boolean show;
+    private Boolean show;
+
+    public ButtonPermissionVo() {
+    }
+
+    public ButtonPermissionVo(String code, Boolean show) {
+        this.code = code;
+        this.show = show;
+    }
+
 }

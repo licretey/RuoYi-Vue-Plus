@@ -157,13 +157,17 @@ public class PlusSpringCacheManager implements CacheManager {
         if (array.length > 3) {
             config.setMaxSize(Integer.parseInt(array[3]));
         }
+        int local = 1;
+        if (array.length > 4) {
+            local = Integer.parseInt(array[4]);
+        }
 
         // 创建分组
         if (config.getMaxIdleTime() == 0 && config.getTTL() == 0 && config.getMaxSize() == 0) {
-            return createMap(name, config);
+            return createMap(name, config, local);
         }
 
-        return createMapCache(name, config);
+        return createMapCache(name, config, local);
     }
 
     /**
@@ -172,12 +176,15 @@ public class PlusSpringCacheManager implements CacheManager {
      * @param config
      * @return
      */
-    private Cache createMap(String name, CacheConfig config) {
+    private Cache createMap(String name, CacheConfig config, int local) {
         // 从redis中读取缓存组或新建一个
         RMap<Object, Object> map = RedisUtils.getClient().getMap(name);
 
-        // 没有限制
-        Cache cache = new CaffeineCacheDecorator(name, new RedissonCache(map, allowNullValues));
+        Cache cache = new RedissonCache(map, allowNullValues);
+        if (local == 1) {
+            // 没有限制
+            cache = new CaffeineCacheDecorator(name, cache);
+        }
         if (transactionAware) {
             // 会考虑事务
             cache = new TransactionAwareCacheDecorator(cache);
@@ -197,11 +204,14 @@ public class PlusSpringCacheManager implements CacheManager {
      * @param config
      * @return
      */
-    private Cache createMapCache(String name, CacheConfig config) {
+    private Cache createMapCache(String name, CacheConfig config, int local) {
         RMapCache<Object, Object> map = RedisUtils.getClient().getMapCache(name);
 
         // 将config配置设置到redis缓存中
-        Cache cache = new CaffeineCacheDecorator(name, new RedissonCache(map, config, allowNullValues));
+        Cache cache = new RedissonCache(map, config, allowNullValues);
+        if (local == 1) {
+            cache = new CaffeineCacheDecorator(name, cache);
+        }
         if (transactionAware) {
             cache = new TransactionAwareCacheDecorator(cache);
         }
