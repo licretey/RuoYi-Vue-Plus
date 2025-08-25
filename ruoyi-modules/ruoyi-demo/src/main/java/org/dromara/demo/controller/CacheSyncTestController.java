@@ -123,7 +123,6 @@ public class CacheSyncTestController {
         Object value = RedisUtils.getCacheObject(redisKey);
         return R.ok("Redis缓存数据", new Object() {
             public String key = redisKey;
-            public Object value = value;
             public boolean exists = value != null;
             public String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         });
