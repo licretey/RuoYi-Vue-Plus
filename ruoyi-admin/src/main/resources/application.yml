@@ -1,11 +1,32 @@
+# 项目相关配置
+ruoyi:
+  # 名称
+  name: RuoYi-Vue-Plus
+  # 版本
+  version: ${revision}
+  # 版权年份
+  copyrightYear: 2024
+
+captcha:
+  enable: false
+  # 页面 <参数设置> 可开启关闭 验证码校验
+  # 验证码类型 math 数组计算 char 字符验证
+  type: MATH
+  # line 线段干扰 circle 圆圈干扰 shear 扭曲干扰
+  category: CIRCLE
+  # 数字验证码位数
+  numberLength: 1
+  # 字符验证码长度
+  charLength: 4
+
 # 开发环境配置
 server:
-  # 服务器的HTTP端口，默认为8080
-  port: 8080
+  # 服务器的HTTP端口，默认为8088认证端口也是这个)
+  port: 8088
   servlet:
     # 应用的访问路径
     context-path: /
-  # undertow 配置
+  # undertow 配R置
   undertow:
     # HTTP post内容的最大大小。当值为-1时，默认值为大小是无限的
     max-http-post-size: -1
@@ -20,25 +41,12 @@ server:
       # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
       worker: 256
 
-captcha:
-  # 是否启用验证码校验
-  enable: true
-  # 验证码类型 math 数组计算 char 字符验证
-  type: MATH
-  # line 线段干扰 circle 圆圈干扰 shear 扭曲干扰
-  category: CIRCLE
-  # 数字验证码位数
-  numberLength: 1
-  # 字符验证码长度
-  charLength: 4
-
 # 日志配置
 logging:
   level:
     org.dromara: @logging.level@
     org.springframework: warn
     org.mybatis.spring.mapper: error
-    org.apache.fury: warn
   config: classpath:logback-plus.xml
 
 # 用户配置
@@ -52,7 +60,7 @@ user:
 # Spring配置
 spring:
   application:
-    name: RuoYi-Vue-Plus
+    name: ${ruoyi.name}
   threads:
     # 开启虚拟线程 仅jdk21可用
     virtual:
@@ -102,15 +110,17 @@ sa-token:
 security:
   # 排除路径
   excludes:
+    # 静态资源
     - /*.html
     - /**/*.html
     - /**/*.css
     - /**/*.js
+    # 公共路径
     - /favicon.ico
     - /error
+    # swagger 文档配置
     - /*/api-docs
     - /*/api-docs/**
-    - /warm-flow-ui/config
 
 # 多租户配置
 tenant:
@@ -127,12 +137,11 @@ tenant:
     - sys_user_role
     - sys_client
     - sys_oss_config
+    - es_tms_choice_dictionaries
 
 # MyBatisPlus配置
 # https://baomidou.com/config/
 mybatis-plus:
-  # 自定义配置 是否全局开启逻辑删除 关闭后 所有逻辑删除功能将失效
-  enableLogicDelete: true
   # 多包名使用 例如 org.dromara.**.mapper,org.xxx.**.mapper
   mapperPackage: org.dromara.**.mapper
   # 对应的 XML 文件位置
@@ -177,13 +186,16 @@ springdoc:
   api-docs:
     # 是否开启接口文档
     enabled: true
+  #  swagger-ui:
+  #    # 持久化认证数据
+  #    persistAuthorization: true
   info:
     # 标题
-    title: '标题：RuoYi-Vue-Plus多租户管理系统_接口文档'
+    title: '标题：${ruoyi.name}多租户管理系统_接口文档'
     # 描述
     description: '描述：用于管理集团旗下公司的人员信息,具体包括XXX,XXX模块...'
     # 版本
-    version: '版本号: ${project.version}'
+    version: '版本号: ${ruoyi.version}'
     # 作者信息
     contact:
       name: Lion Li
@@ -206,16 +218,15 @@ springdoc:
       packages-to-scan: org.dromara.system
     - group: 4.代码生成模块
       packages-to-scan: org.dromara.generator
-    - group: 5.工作流模块
-      packages-to-scan: org.dromara.workflow
 
 # 防止XSS攻击
 xss:
   # 过滤开关
   enabled: true
   # 排除链接（多个用逗号分隔）
-  excludeUrls:
-    - /system/notice
+  excludes: /system/notice
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
 
 # 全局线程池相关配置
 # 如使用JDK21请直接使用虚拟线程 不要开启此配置
@@ -244,7 +255,7 @@ management:
     health:
       show-details: ALWAYS
     logfile:
-      external-file: ../logs/sys-console.log
+      external-file: ./logs/sys-console.log
 
 --- # 默认/推荐使用sse推送
 sse:
@@ -260,19 +271,24 @@ websocket:
   # 设置访问源地址
   allowedOrigins: '*'
 
---- # warm-flow工作流配置
-warm-flow:
-  # 是否开启工作流，默认true
+--- #flowable配置
+flowable:
+  # 开关 用于启动/停用工作流
   enabled: true
-  # 是否开启设计器ui
-  ui: true
-  # 默认Authorization，如果有多个token，用逗号分隔
-  token-name: ${sa-token.token-name},clientid
-  # 流程状态对应的三元色
-  chart-status-color:
-    ## 未办理
-    - 62,62,62
-    ## 待办理
-    - 255,205,23
-    ## 已办理
-    - 157,255,0
+  process.enabled: ${flowable.enabled}
+  eventregistry.enabled: ${flowable.enabled}
+  async-executor-activate: false #关闭定时任务JOB
+  #  将databaseSchemaUpdate设置为true。当Flowable发现库与数据库表结构不一致时，会自动将数据库表结构升级至新版本。
+  database-schema-update: true
+  activity-font-name: 宋体
+  label-font-name: 宋体
+  annotation-font-name: 宋体
+  # 关闭各个模块生成表，目前只使用工作流基础表
+  idm:
+    enabled: false
+  cmmn:
+    enabled: false
+  dmn:
+    enabled: false
+  app:
+    enabled: false
